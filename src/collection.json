@@ -4,6 +4,12 @@
     "ng-deploy-az": {
       "description": "A blank schematic.",
       "factory": "./ng-deploy-az/index#ngDeployAz"
+    },
+    "ng-add": {
+      "description": "Adds Angular Deploy Azure to the application without affecting any templates",
+      "factory": "./ng-add/index#ngAdd",
+      "schema": "./ng-add/schema.json",
+      "aliases": ["install"]
     }
   }
 }

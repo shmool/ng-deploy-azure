@@ -1,0 +1,22 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "id": "azure-deploy-schematic-ng-add",
+  "title": "Azure Deploy ng-add schematic",
+  "type": "object",
+  "properties": {
+    "project": {
+      "type": "string",
+      "description": "The name of the project.",
+      "$default": {
+        "$source": "projectName"
+      }
+    },
+    "subscription": {
+      "type": "string",
+      "default": "",
+      "description": "Your Azure subscription key"
+    }
+  },
+  "required": [],
+  "additionalProperties": false
+}
