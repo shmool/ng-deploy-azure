@@ -4,7 +4,12 @@
   "description": "A blank schematics",
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "test": "npm run build && jasmine src/**/*_spec.js"
+    "clean": "git checkout HEAD -- sandbox && git clean -f -d sandbox",
+    "link:schematic": "npm link && cd sandbox && npm link \"ng-deploy-az\"",
+    "sandbox:ng-add": "cd sandbox && ng g angular-fire-schematics:ng-add",
+    "test": "npm run clean && npm run sandbox:ng-add && npm run test:sandbox",
+    "test:unit": "npm run build && jasmine src/**/*_spec.js",
+    "test:sandbox": "cd sandbox && npm run lint && npm run test && npm run build"
   },
   "keywords": [
     "schematics"
