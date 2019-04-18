@@ -1,6 +1,66 @@
-# Getting Started With Schematics
+# ng deploy Azure
 
-This repository is a basic Schematic implementation that serves as a starting point to create and publish Schematics to NPM.
+Angular-CLI deploy to Azure
+
+This angular schematic would allow you to deploy you Angular app to Azure static Hosting.
+
+## Installing 
+
+Run `ng --version`, make sure you have angular CLI version greater than 8.
+
+Add the schematic by running: 
+
+```sh
+ng add ng-deploy-azure
+```
+
+This command will prompt you to login to Azure and select or create the storage account.
+It will add azure.json with the configuration and modify angular.json with the deploy commands. 
+
+## Deploying
+
+Once there's a valid `azure.json` file, you can deploy the app.
+If the build target is empty, build will be run first.
+
+```sh
+ng run <project-name>:deploy
+```
+
+## Logout from Azure
+
+To clear the cached credentials run:
+```sh
+ng run <project-name>:logout
+```
+
+## Local development
+
+Build the project with watch:
+
+```sh
+npm run start
+```
+
+Create a local npm link of `ng-deploy-azure`:
+
+```sh
+npm link
+```
+
+Create a new Angular project with the Angular CLI. Make sure you're using the latest version.
+
+```sh
+ng new <project-name>
+```
+
+Link `ng-deploy-azure` to the project:
+
+```sh
+cd <project-name>
+npm link ng-deploy-azure
+```
+
+Add the schematic and deploy as described above.
 
 ### Testing
 
@@ -15,14 +75,3 @@ schematics --help
 
 `npm run test` will run the unit tests, using Jasmine as a runner and test framework.
 
-### Publishing
-
-To publish, simply do:
-
-```bash
-npm run build
-npm publish
-```
-
-That's it!
- 

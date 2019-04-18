@@ -11,10 +11,50 @@
         "$source": "projectName"
       }
     },
-    "subscription": {
+    "debug": {
+      "type": "boolean",
+      "default": false,
+      "description": "Debug."
+    },
+    "subscriptionId": {
       "type": "string",
       "default": "",
-      "description": "Your Azure subscription key"
+      "description": "Your Azure subscription key."
+    },
+    "subscriptionName": {
+      "type": "string",
+      "default": "",
+      "description": "subscription ID under which to create new resources"
+    },
+    "resourceGroup": {
+      "type": "string",
+      "default": "",
+      "description": "name of the Azure Resource Group to deploy to."
+    },
+    "account": {
+      "type": "string",
+      "default": "",
+      "description": "name of the Azure Storage Account to deploy to."
+    },
+    "location": {
+      "type": "string",
+      "default": "",
+      "description": "location where to create storage account e.g. \"West US\""
+    },
+    "resource-allocation": {
+      "type": "boolean",
+      "default": true,
+      "description": "When false, don't validate against Azure (no login needed). Only add the needed configuration in angular.json and azure.json."
+    },
+    "config": {
+      "type": "boolean",
+      "default": true,
+      "description": "When false, don't configure Azure resources (no login needed). Only add the needed configuration in angular.json."
+    },
+    "dry": {
+      "type": "boolean",
+      "default": false,
+      "description": "Don't validate or change any files. Only output what would be the change in the project."
     }
   },
   "required": [],

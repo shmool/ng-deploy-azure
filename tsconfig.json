@@ -3,6 +3,7 @@
     "baseUrl": "tsconfig",
     "lib": [
       "es2018",
+      "es2015",
       "dom"
     ],
     "declaration": true,
@@ -12,7 +13,7 @@
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": true,
     "noImplicitThis": true,
-    "noUnusedParameters": true,
+    "noUnusedParameters": false,
     "noUnusedLocals": true,
     "rootDir": "src/",
     "skipDefaultLibCheck": true,
