@@ -4,36 +4,19 @@ Angular-CLI deploy to Azure
 
 This angular schematic would allow you to deploy you Angular app to Azure static Hosting.
 
-## Installing 
+## Usage
 
-Run `ng --version`, make sure you have angular CLI version greater than 8.
-
-Add the schematic by running: 
-
-```sh
-ng add ng-deploy-azure
-```
-
-This command will prompt you to login to Azure and select or create the storage account.
-It will add azure.json with the configuration and modify angular.json with the deploy commands. 
-
-## Deploying
-
-Once there's a valid `azure.json` file, you can deploy the app.
-If the build target is empty, build will be run first.
-
-```sh
-ng run <project-name>:deploy
-```
-
-## Logout from Azure
-
-To clear the cached credentials run:
-```sh
-ng run <project-name>:logout
-```
+Once ng-deploy-azure is published on npm, the instructions for using it directly on an Angular project will be added. 
+At the moment, please follow the steps described in "Local development".
 
 ## Local development
+
+Clone the project.
+Install the dependencies: 
+
+```sh
+npm run install
+```
 
 Build the project with watch:
 
@@ -41,37 +24,69 @@ Build the project with watch:
 npm run start
 ```
 
-Create a local npm link of `ng-deploy-azure`:
+-- or without watch:
+
+```sh
+npm run build
+```
+
+Create a local npm link:
 
 ```sh
 npm link
 ```
 
-Create a new Angular project with the Angular CLI. Make sure you're using the latest version.
+### Adding to an Angular project - ng add
 
-```sh
-ng new <project-name>
+The schematic runs from within an Angular project. Enter the project's directory.
+
+Run `ng --version`, make sure you have angular CLI version v8.0.0-beta.18 or greater. 
+If needed, update the CLI:
+
 ```
+ng update @angular/cli @angular/core --next=true
 
-Link `ng-deploy-azure` to the project:
+``` 
 
-```sh
-cd <project-name>
+Make sure TypeScript is version 3.4.5 or greater. 
+
+Link ng-deploy-azure:
+
+```
 npm link ng-deploy-azure
 ```
 
-Add the schematic and deploy as described above.
+Add ng-deploy-azure by running: 
 
-### Testing
-
-To test locally, install `@angular-devkit/schematics-cli` globally and use the `schematics` command line tool. That tool acts the same as the `generate` command of the Angular CLI, but also has a debug mode.
-
-Check the documentation with
-```bash
-schematics --help
+```sh
+ng add ng-deploy-azure
 ```
 
-### Unit Testing
+This command will prompt you to login to Azure, select a subscription, 
+and select or create the resource group and the storage account in which the app will be deployed.
+If you choose to create a resource group and/or a storage account you will be asked to 
+select the location for the resources and they will be created in your Azure account, 
+configured for static hosting.
+The command will add `azure.json` with the configuration and modify `angular.json` with the deploy commands. 
 
-`npm run test` will run the unit tests, using Jasmine as a runner and test framework.
+### Deploying
 
+Once there's a valid `azure.json` file, you can deploy the app.
+
+```sh
+ng run <project-name>:deploy
+```
+
+If the build target is empty, the project will be built with the production option 
+(similar to running `ng build --prod`).
+
+Then, the project will be deployed to the storage account specified in `azure.json`.
+
+In future versions of the Angular CLI you will be able to simply run `ng deploy`.
+
+### Logging out from Azure
+
+To clear the cached credentials run:
+```sh
+ng run <project-name>:logout
+```
