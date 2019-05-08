@@ -50,7 +50,7 @@ function checkNameAvailability(client: StorageManagementClient, logger: Logger, 
     };
 }
 
-async function generateDefaultAccountName(client: StorageManagementClient, projectName: string, logger: Logger) {
+export async function generateDefaultAccountName(client: StorageManagementClient, projectName: string, logger: Logger) {
     const normalizedProjectNameArray = projectName.match(/[a-zA-Z0-9]/g);
     const normalizedProjectName = normalizedProjectNameArray ? normalizedProjectNameArray.join('') : '';
     let name = `${ normalizedProjectName }storage`;

@@ -4,12 +4,12 @@ import { ServiceURL, SharedKeyCredential } from '@azure/storage-blob';
 import { loginToAzure } from '../util/azure/auth';
 import { DeviceTokenCredentials } from '@azure/ms-rest-nodeauth';
 import { chooseSubscription } from '../util/azure/subscription';
-import { createResourceGroup, getLocation, getResourceGroup } from '../util/azure/resource-group';
+import { createResourceGroup } from '../util/azure/resource-group';
 import {
     createAccount,
     getAccountKey,
-    createWebContainer, getAccountName, setStaticSiteToPublic,
-    getAzureStorageClient
+    createWebContainer, setStaticSiteToPublic,
+    getAzureStorageClient, generateDefaultAccountName
 } from '../util/azure/account';
 import { addDeployToProject, AngularWorkspace } from '../util/workspace/angular-json';
 import { generateAzureJson } from '../util/workspace/azure-json';
@@ -46,7 +46,7 @@ export function addDeployAzure(_options: any): Rule {
             return;
         }
 
-        const resourceGroupResult = await getResourceGroup(credentials, subscription, _options.project);
+        /*const resourceGroupResult = await getResourceGroup(credentials, subscription, _options.project);
 
         const resourceGroupName = resourceGroupResult.resourceGroup || resourceGroupResult.newResourceGroup;
 
@@ -55,10 +55,18 @@ export function addDeployAzure(_options: any): Rule {
             location = await getLocation();
             _context.logger.info(`creating resource group ${ resourceGroupName }`);
             await createResourceGroup(resourceGroupName, subscription, credentials, location);
-        }
+        }*/
+
+        const resourceGroupName = _options.project;
+        const location = 'northeurope';
+
+        _context.logger.info(`Creating resource group "${resourceGroupName}" in location ${location}`);
+        await createResourceGroup(resourceGroupName, subscription, credentials, location);
+        _context.logger.info(`DONE!`);
+
         const client = getAzureStorageClient(credentials, subscription);
 
-        const accountName = await getAccountName(client, resourceGroupName, _options.project, _context.logger);
+        /*const accountName = await getAccountName(client, resourceGroupName, _options.project, _context.logger);
 
         const needToCreateAccount = !!accountName.newAccount;
 
@@ -69,7 +77,15 @@ export function addDeployAzure(_options: any): Rule {
             }
             _context.logger.info(`creating ${ account }`);
             await createAccount(account, client, resourceGroupName, location);
-        }
+        }*/
+
+        const needToCreateAccount = true;
+
+        const account = await generateDefaultAccountName(client, _options.project, _context.logger);
+
+        _context.logger.info(`Creating storage account "${account}"`);
+        await createAccount(account, client, resourceGroupName, location);
+        _context.logger.info(`DONE!`);
 
         _context.logger.info('retrieving account keys');
         const accountKey = await getAccountKey(account, client, resourceGroupName);
