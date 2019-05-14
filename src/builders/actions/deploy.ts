@@ -94,6 +94,7 @@ export default async function deploy(context: BuilderContext, projectRoot: strin
     context.logger.info(
         chalk.green(`see your deployed site at ${ endpoint }`)
     );
+    // TODO: log url for account at Azure portal
 }
 
 async function getFiles(context: BuilderContext, filesPath: string, projectRoot: string) {
@@ -127,7 +128,7 @@ export async function uploadFilesToAzure(
 
     bar.tick(0);
 
-    await promiseLimit(5).map(files, async function (file: string) {
+    await promiseLimit(5).map(files, async function(file: string) {
         const blobURL = BlobURL.fromContainerURL(containerURL, file);
         const blockBlobURL = BlockBlobURL.fromBlobURL(blobURL);
 

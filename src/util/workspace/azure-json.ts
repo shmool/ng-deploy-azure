@@ -27,6 +27,7 @@ export function generateAzureJson(tree: Tree, appDeployConfig: AppDeployConfig, 
     const azureJson: AzureJSON = tree.exists(path) ? safeReadJSON(path, tree) : emptyAzureJson();
 
     if (azureJson.hosting.find(config => config.app.project === appDeployConfig.project)) {
+        // TODO: if exists - update?
         throw new SchematicsException(`Target ${ appDeployConfig.project } already exists in ${ path }`);
     }
 

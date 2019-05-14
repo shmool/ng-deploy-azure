@@ -3,11 +3,17 @@ import * as inquirer from 'inquirer';
 const fuzzy = require('fuzzy');
 
 export interface PromptOptions {
-    name: string;
+    name?: string;
     message: string;
     default?: string;
     title?: string;
     validate?: any;
+    id: string;
+}
+
+export interface ListItem {
+    name: string; // display name
+    id?: string;
 }
 
 inquirer.registerPrompt('autocomplete', require('inquirer-autocomplete-prompt'));
@@ -17,10 +23,10 @@ export async function filteredList(list: ListItem[], listOptions: PromptOptions,
         return newItemOptions && newItemPrompt(newItemOptions);
     }
 
-    const displayedList = newItemOptions ? [{ name: newItemOptions.title }, ...list] : list;
-    const result = await listPrompt(displayedList as ListItem[], listOptions.name, listOptions.message);
+    const displayedList = newItemOptions ? [newItemOptions, ...list] : list;
+    const result = await listPrompt(displayedList as ListItem[], listOptions.id, listOptions.message);
 
-    if (newItemOptions && result[listOptions.name] === newItemOptions.title) {
+    if (newItemOptions && newItemOptions.id && result[listOptions.id].id === newItemOptions.id) {
         return newItemPrompt(newItemOptions);
     }
     return result;
@@ -31,13 +37,13 @@ export async function newItemPrompt(newItemOptions: PromptOptions) {
     do {
         item = await (inquirer as any).prompt({
             type: 'input',
-            name: newItemOptions.name,
+            name: newItemOptions.id,
             default: newItemOptions.default,
             message: newItemOptions.message
         });
 
         if (newItemOptions.validate) {
-            valid = await newItemOptions.validate(item[newItemOptions.name]);
+            valid = await newItemOptions.validate(item[newItemOptions.id]);
         }
     } while (!valid);
 
@@ -57,10 +63,6 @@ const isListItem = (elem: ListItem | { original: ListItem }): elem is ListItem =
     return (<{ original: ListItem }>elem).original === undefined;
 };
 
-export interface ListItem {
-    name: string;
-}
-
 function searchList(list: ListItem[]) {
     return (_: any, input: string) => {
         return Promise.resolve(
@@ -77,7 +79,7 @@ function searchList(list: ListItem[]) {
                     } else {
                         original = result.original;
                     }
-                    return original;
+                    return { name: original.name, value: original };
                 })
         );
     };

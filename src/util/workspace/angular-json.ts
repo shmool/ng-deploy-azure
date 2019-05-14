@@ -1,6 +1,7 @@
 import { SchematicsException, Tree } from '@angular-devkit/schematics';
 import { experimental, JsonParseMode, parseJson } from '@angular-devkit/core';
 import { WorkspaceProject } from 'schematics-utilities';
+import { WorkspaceTool } from '@angular-devkit/core/src/experimental/workspace';
 
 export class AngularWorkspace {
     tree: Tree;
@@ -89,28 +90,37 @@ export class AngularWorkspace {
         return project;
     }
 
-}
+    getArchitect(): WorkspaceTool {
+        if (!this || !this.project || !this.project.architect) {
+            throw new SchematicsException('An error has occurred while retrieving project configuration.');
+        }
 
-
-export function addDeployToProject(workspace: AngularWorkspace) {
-    if (!workspace || !workspace.project || !workspace.project.architect) {
-        throw new SchematicsException('An error has occurred while retrieving project configuration.');
+        return this.project.architect;
     }
 
-    workspace.project.architect['deploy'] = {
-        builder: 'ng-deploy-azure:deploy',
-        options: {
-            host: 'Azure',
-            type: 'static',
-            config: 'azure.json'
-        }
-    };
+    updateTree() {
+        this.tree.overwrite(this.workspacePath, JSON.stringify(this.schema, null, 2));
+    }
 
-    workspace.project.architect['logout'] = {
-        builder: 'ng-deploy-azure:logout'
-    };
+    addLogoutArchitect() {
+        this.getArchitect()['azureLogout'] = {
+            builder: 'ng-deploy-azure:logout'
+        };
 
-    workspace.tree.overwrite(workspace.workspacePath, JSON.stringify(workspace.schema, null, 2));
+        this.updateTree();
+    }
+
+    addDeployArchitect() {
+        this.getArchitect()['deploy'] = {
+            builder: 'ng-deploy-azure:deploy',
+            options: {
+                host: 'Azure',
+                type: 'static',
+                config: 'azure.json'
+            }
+        };
+
+        this.updateTree();
+    }
+
 }
-
-

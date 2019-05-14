@@ -2,7 +2,7 @@ import { LinkedSubscription } from '@azure/ms-rest-nodeauth';
 import { prompt } from 'inquirer';
 
 
-export async function chooseSubscription(
+export async function selectSubscription(
     subs: LinkedSubscription[] | undefined
 ): Promise<string> {
     if (Array.isArray(subs)) {

@@ -1,114 +1,114 @@
 export const locations = [
     {
-        'name': 'eastasia',
-        'displayName': 'East Asia'
+        'id': 'eastasia',
+        'name': 'East Asia'
     },
     {
-        'name': 'southeastasia',
-        'displayName': 'Southeast Asia'
+        'id': 'southeastasia',
+        'name': 'Southeast Asia'
     },
     {
-        'name': 'centralus',
-        'displayName': 'Central US'
+        'id': 'centralus',
+        'name': 'Central US'
     },
     {
-        'name': 'eastus',
-        'displayName': 'East US'
+        'id': 'eastus',
+        'name': 'East US'
     },
     {
-        'name': 'eastus2',
-        'displayName': 'East US 2'
+        'id': 'eastus2',
+        'name': 'East US 2'
     },
     {
-        'name': 'westus',
-        'displayName': 'West US'
+        'id': 'westus',
+        'name': 'West US'
     },
     {
-        'name': 'northcentralus',
-        'displayName': 'North Central US'
+        'id': 'northcentralus',
+        'name': 'North Central US'
     },
     {
-        'name': 'southcentralus',
-        'displayName': 'South Central US'
+        'id': 'southcentralus',
+        'name': 'South Central US'
     },
     {
-        'name': 'northeurope',
-        'displayName': 'North Europe'
+        'id': 'northeurope',
+        'name': 'North Europe'
     },
     {
-        'name': 'westeurope',
-        'displayName': 'West Europe'
+        'id': 'westeurope',
+        'name': 'West Europe'
     },
     {
-        'name': 'japanwest',
-        'displayName': 'Japan West'
+        'id': 'japanwest',
+        'name': 'Japan West'
     },
     {
-        'name': 'japaneast',
-        'displayName': 'Japan East'
+        'id': 'japaneast',
+        'name': 'Japan East'
     },
     {
-        'name': 'brazilsouth',
-        'displayName': 'Brazil South'
+        'id': 'brazilsouth',
+        'name': 'Brazil South'
     },
     {
-        'name': 'australiaeast',
-        'displayName': 'Australia East'
+        'id': 'australiaeast',
+        'name': 'Australia East'
     },
     {
-        'name': 'australiasoutheast',
-        'displayName': 'Australia Southeast'
+        'id': 'australiasoutheast',
+        'name': 'Australia Southeast'
     },
     {
-        'name': 'southindia',
-        'displayName': 'South India'
+        'id': 'southindia',
+        'name': 'South India'
     },
     {
-        'name': 'centralindia',
-        'displayName': 'Central India'
+        'id': 'centralindia',
+        'name': 'Central India'
     },
     {
-        'name': 'westindia',
-        'displayName': 'West India'
+        'id': 'westindia',
+        'name': 'West India'
     },
     {
-        'name': 'canadacentral',
-        'displayName': 'Canada Central'
+        'id': 'canadacentral',
+        'name': 'Canada Central'
     },
     {
-        'name': 'canadaeast',
-        'displayName': 'Canada East'
+        'id': 'canadaeast',
+        'name': 'Canada East'
     },
     {
-        'name': 'uksouth',
-        'displayName': 'UK South'
+        'id': 'uksouth',
+        'name': 'UK South'
     },
     {
-        'name': 'ukwest',
-        'displayName': 'UK West'
+        'id': 'ukwest',
+        'name': 'UK West'
     },
     {
-        'name': 'westcentralus',
-        'displayName': 'West Central US'
+        'id': 'westcentralus',
+        'name': 'West Central US'
     },
     {
-        'name': 'westus2',
-        'displayName': 'West US 2'
+        'id': 'westus2',
+        'name': 'West US 2'
     },
     {
-        'name': 'koreacentral',
-        'displayName': 'Korea Central'
+        'id': 'koreacentral',
+        'name': 'Korea Central'
     },
     {
-        'name': 'koreasouth',
-        'displayName': 'Korea South'
+        'id': 'koreasouth',
+        'name': 'Korea South'
     },
     {
-        'name': 'francecentral',
-        'displayName': 'France Central'
+        'id': 'francecentral',
+        'name': 'France Central'
     },
     {
-        'name': 'southafricanorth',
-        'displayName': 'South Africa North'
+        'id': 'southafricanorth',
+        'name': 'South Africa North'
     }
 ];
