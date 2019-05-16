@@ -1,3 +1,13 @@
+export interface StorageLocation {
+    id: string;
+    name: string;
+}
+
+export const defaultLocation =   {
+    'id': 'westus',
+    'name': 'West US'
+};
+
 export const locations = [
     {
         'id': 'eastasia',
@@ -112,3 +122,12 @@ export const locations = [
         'name': 'South Africa North'
     }
 ];
+
+export function getLocation(locationName: string | undefined) {
+    if (!locationName) {
+        return;
+    }
+    return locations.find(location => {
+        return location.id === locationName || location.name === locationName;
+    });
+}

@@ -1,9 +1,15 @@
 import { DeviceTokenCredentials } from '@azure/ms-rest-nodeauth';
 import { ResourceManagementClient } from '@azure/arm-resources';
 import { filteredList, ListItem } from '../prompt/list';
-import { locations } from './locations';
+import { getLocation, locations, StorageLocation } from './locations';
 import * as Models from '@azure/arm-resources/lib/models/index';
-import { Logger } from '../shared/types';
+import { AddOptions, Logger } from '../shared/types';
+import { generateName } from '../prompt/name-generator';
+
+const defaultLocation = {
+    id: 'westus',
+    name: 'West US'
+};
 
 export interface ResourceGroup {
     id: string;
@@ -36,35 +42,57 @@ const locationPromptOptions = {
 };
 
 export async function getResourceGroup(
-    creds: DeviceTokenCredentials, subscription: string, projectName: string, logger: Logger
-) {
+    creds: DeviceTokenCredentials, subscription: string, options: AddOptions, logger: Logger
+): Promise<ResourceGroup> {
+
+    let resourceGroupName = options.resourceGroup || '';
+    let location = getLocation(options.location);
+
     const client = new ResourceManagementClient(creds, subscription);
-    // TODO: default name can be assigned later, only if creating a new resource group.
-    // TODO: check availability of the default name
-    newResourceGroupsPromptOptions.default = projectName;
+    const resourceGroupList = await client.resourceGroups.list() as ResourceGroupDetails[];
+    let result;
 
-    const chosenResourceGroup = await filteredList(
-        await client.resourceGroups.list() as ResourceGroupDetails[],
-        resourceGroupsPromptOptions,
-        newResourceGroupsPromptOptions);
+    const initialName = options.project + '-static-deploy';
+    const defaultResourceGroupName = await resourceGroupNameGenerator(initialName, resourceGroupList);
 
-    // TODO: add check whether the new resource group doesn't already exist.
-    //  Currently throws an error of exists in a different location:
-    //  Invalid resource group location 'westus'. The Resource group already exists in location 'eastus2'.
-
-    const resourceGroupName = chosenResourceGroup.resourceGroup || chosenResourceGroup.newResourceGroup;
-
-    let location;
-    if (chosenResourceGroup.newResourceGroup) {
-        location = await getLocation();
-        logger.info(`creating resource group ${ resourceGroupName } at ${ location.name } (${ location.id })`);
-        return await createResourceGroup(resourceGroupName, subscription, creds, location.id);
+    if (!options.manual) { // quickstart
+        resourceGroupName = resourceGroupName || defaultResourceGroupName;
+        location = location || defaultLocation;
     }
 
-    return chosenResourceGroup.resourceGroup;
+    if (!!resourceGroupName) { // provided or quickstart + default
+        result = resourceGroupList.find(rg => rg.name === resourceGroupName);
+        if (!!result) {
+            logger.info(`Using existing resource group ${ resourceGroupName }`);
+        }
+    } else { // not provided + manual
+
+        // TODO: default name can be assigned later, only if creating a new resource group.
+        // TODO: check availability of the default name
+        newResourceGroupsPromptOptions.default = defaultResourceGroupName;
+
+        result = (await filteredList(
+            resourceGroupList,
+            resourceGroupsPromptOptions,
+            newResourceGroupsPromptOptions)).resourceGroup;
+
+        // TODO: add check whether the new resource group doesn't already exist.
+        //  Currently throws an error of exists in a different location:
+        //  Invalid resource group location 'westus'. The Resource group already exists in location 'eastus2'.
+
+        resourceGroupName = result.name || result.newResourceGroup;
+    }
+
+    if (!result || result.newResourceGroup) {
+        location = location || await askLocation(); // if quickstart - location defined above
+        logger.info(`Creating resource group ${ resourceGroupName } at ${ location.name } (${ location.id })`);
+        result = await createResourceGroup(resourceGroupName, subscription, creds, location.id);
+    }
+
+    return result;
 }
 
-export async function getLocation() {
+export async function askLocation(): Promise<StorageLocation> {
     const res = await filteredList(locations, locationPromptOptions);
     return res.location;
 }
@@ -79,4 +107,14 @@ export async function createResourceGroup(
     const client = new ResourceManagementClient(creds, subscription);
     const resourceGroupRes = await client.resourceGroups.createOrUpdate(name, { location });
     return resourceGroupRes;
+}
+
+function resourceGroupExists(resourceGroupList: ResourceGroupDetails[]) {
+    return async (name: string) => {
+        return Promise.resolve(!resourceGroupList.find(rg => rg.name === name));
+    };
+}
+
+async function resourceGroupNameGenerator(initialName: string, resourceGroupList: ResourceGroupDetails[]) {
+    return await generateName(initialName, resourceGroupExists(resourceGroupList));
 }

@@ -6,6 +6,7 @@ export interface PromptOptions {
     name?: string;
     message: string;
     default?: string;
+    defaultGenerator?: ((name: string) => Promise<string>);
     title?: string;
     validate?: any;
     id: string;
@@ -34,11 +35,15 @@ export async function filteredList(list: ListItem[], listOptions: PromptOptions,
 
 export async function newItemPrompt(newItemOptions: PromptOptions) {
     let item, valid = true;
+    const defaultValue =
+        newItemOptions.defaultGenerator ?
+            await newItemOptions.defaultGenerator(newItemOptions.default || '') :
+            newItemOptions.default;
     do {
         item = await (inquirer as any).prompt({
             type: 'input',
             name: newItemOptions.id,
-            default: newItemOptions.default,
+            default: defaultValue,
             message: newItemOptions.message
         });
 

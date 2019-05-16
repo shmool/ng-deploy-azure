@@ -7,9 +7,9 @@ import { getResourceGroup } from '../util/azure/resource-group';
 import { getAccount, getAzureStorageClient } from '../util/azure/account';
 import { AngularWorkspace } from '../util/workspace/angular-json';
 import { generateAzureJson } from '../util/workspace/azure-json';
+import { AddOptions } from '../util/shared/types';
 
-
-export function ngAdd(_options: any): Rule {
+export function ngAdd(_options: AddOptions): Rule {
     return (tree: Tree, _context: SchematicContext) => {
         return chain([
             logMsftLogo(),
@@ -26,7 +26,7 @@ function logMsftLogo(): Rule {
     };
 }
 
-export function addDeployAzure(_options: any): Rule {
+export function addDeployAzure(_options: AddOptions): Rule {
     return async (tree: Tree, _context: SchematicContext) => {
         // TODO: if azure.json already exists: get data / delete / error
 
@@ -36,13 +36,13 @@ export function addDeployAzure(_options: any): Rule {
         const credentials = auth.credentials as DeviceTokenCredentials;
         project.addLogoutArchitect();
 
-        const subscription = await selectSubscription(auth.subscriptions);
+        const subscription = await selectSubscription(auth.subscriptions, _options, _context.logger);
 
-        const resourceGroup = await getResourceGroup(credentials, subscription, _options.project, _context.logger);
+        const resourceGroup = await getResourceGroup(credentials, subscription, _options, _context.logger);
 
         const client = getAzureStorageClient(credentials, subscription);
 
-        const account = await getAccount(client, resourceGroup, _options.project, _context.logger);
+        const account = await getAccount(client, resourceGroup, _options, _context.logger);
 
         const appDeployConfig = {
             project: project.projectName,

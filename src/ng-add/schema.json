@@ -11,6 +11,12 @@
         "$source": "projectName"
       }
     },
+    "manual": {
+      "type": "boolean",
+      "default": false,
+      "alias": "m",
+      "description": "Manually configure (select or create) the resource group and storage account. Default - false: creates a resource group and storage account with arbitrary names."
+    },
     "debug": {
       "type": "boolean",
       "default": false,
@@ -19,27 +25,32 @@
     "subscriptionId": {
       "type": "string",
       "default": "",
-      "description": "Your Azure subscription key."
+      "description": "Your Azure subscription key.",
+      "alias": "i"
     },
     "subscriptionName": {
       "type": "string",
       "default": "",
-      "description": "subscription ID under which to create new resources"
+      "description": "subscription ID under which to create new resources",
+      "alias": "n"
     },
     "resourceGroup": {
       "type": "string",
       "default": "",
-      "description": "name of the Azure Resource Group to deploy to."
+      "description": "name of the Azure Resource Group to deploy to.",
+      "alias": "g"
     },
     "account": {
       "type": "string",
       "default": "",
-      "description": "name of the Azure Storage Account to deploy to."
+      "description": "name of the Azure Storage Account to deploy to.",
+      "alias": "a"
     },
     "location": {
       "type": "string",
       "default": "",
-      "description": "location where to create storage account e.g. \"West US\""
+      "description": "location where to create storage account e.g. \"West US\"",
+      "alias": "l"
     },
     "resource-allocation": {
       "type": "boolean",

@@ -7,3 +7,17 @@ export interface Logger {
     error(message: string, metadata?: JsonObject): void;
     fatal(message: string, metadata?: JsonObject): void;
 }
+
+export interface AddOptions {
+    project: string;
+    manual?: boolean;
+    debug?: boolean;
+    subscriptionId?: string;
+    subscriptionName?: string;
+    resourceGroup?: string;
+    account?: string;
+    location?: string;
+    'resource-allocation'?: boolean;
+    config?: boolean;
+    dry?: boolean;
+}

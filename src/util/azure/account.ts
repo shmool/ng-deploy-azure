@@ -1,10 +1,11 @@
 import { StorageManagementClient } from '@azure/arm-storage';
-import { filteredList, ListItem } from '../prompt/list';
+import { filteredList, ListItem, newItemPrompt } from '../prompt/list';
 import { Aborter, ServiceURL, SharedKeyCredential } from '@azure/storage-blob';
 import { DeviceTokenCredentials } from '@azure/ms-rest-nodeauth';
-import { Logger } from '../shared/types';
+import { AddOptions, Logger } from '../shared/types';
 import { SchematicsException } from '@angular-devkit/schematics';
 import { ResourceGroup } from './resource-group';
+import { generateName } from '../prompt/name-generator';
 
 interface AccountDetails extends ListItem {
     id: string;
@@ -22,6 +23,7 @@ const newAccountPromptOptions = {
     message: 'Enter a name for the new storage account:',
     name: 'Create a new storage account',
     default: '',
+    defaultGenerator: (name: string) => Promise.resolve(''),
     validate: (name: string) => Promise.resolve(true)
 };
 
@@ -32,27 +34,59 @@ export function getAzureStorageClient(credentials: DeviceTokenCredentials, subsc
 export async function getAccount(
     client: StorageManagementClient,
     resourceGroup: ResourceGroup,
-    projectName: string,
+    options: AddOptions,
     logger: Logger) {
 
+    let accountName = options.account || '';
+    let needToCreateAccount = false;
+
     const accounts = await client.storageAccounts.listByResourceGroup(resourceGroup.name);
-    // TODO: default name can be assigned later, only if creating a new account
-    newAccountPromptOptions.default = await generateDefaultAccountName(client, projectName, logger);
-    newAccountPromptOptions.validate = checkNameAvailability(client, logger, true);
 
-    const result = await filteredList(accounts as AccountDetails[], accountPromptOptions, newAccountPromptOptions);
+    function getInitialAccountName() {
+        const normalizedProjectNameArray = options.project.match(/[a-zA-Z0-9]/g);
+        const normalizedProjectName = normalizedProjectNameArray ? normalizedProjectNameArray.join('') : '';
+        return `${ normalizedProjectName }static`;
+    }
 
-    const needToCreateAccount = !!result.newAccount;
-    const accountName = result.newAccount || result.account.name;
+    const initialName = getInitialAccountName();
+    const generateDefaultAccountName = accountNameGenerator(client, logger);
+    const validateAccountName = checkNameAvailability(client, logger, true);
+
+    newAccountPromptOptions.default = initialName;
+    newAccountPromptOptions.defaultGenerator = generateDefaultAccountName;
+    newAccountPromptOptions.validate = validateAccountName;
+
+
+    if (accountName) {
+        const account = accounts.find(acc => acc.name === accountName);
+        if (!!account) { // account exists
+            // TODO: check account configuration
+            logger.info(`Using existing account ${ accountName }`);
+
+        } else { // create account with this name, if valid
+            const valid = await validateAccountName(accountName);
+            if (!valid) {
+                accountName = (await newItemPrompt(newAccountPromptOptions)).newAccount;
+            }
+            needToCreateAccount = true;
+        }
+    } else { // no account flag
+
+        if (!options.manual) { // quickstart - create w/ default name
+            accountName = await generateDefaultAccountName(initialName);
+            needToCreateAccount = true;
+
+        } else { // select from list or create new
+            const result = await filteredList(accounts as AccountDetails[], accountPromptOptions, newAccountPromptOptions);
+            needToCreateAccount = !!result.newAccount;
+            accountName = result.newAccount || result.account.name;
+        }
+    }
 
     if (needToCreateAccount) {
         logger.info(`creating ${ accountName }`);
         await createAccount(accountName, client, resourceGroup.name, resourceGroup.location, logger);
     }
-
-    // TODO: should we check that an existing account has account keys?
-    //  (retrieved for a new account, see createAccount() )
-    // TODO: existing account - check that it has the right configuration (public etc.)
 
     return accountName;
 }
@@ -67,19 +101,10 @@ function checkNameAvailability(client: StorageManagementClient, logger: Logger, 
     };
 }
 
-async function generateDefaultAccountName(client: StorageManagementClient, projectName: string, logger: Logger) {
-    const normalizedProjectNameArray = projectName.match(/[a-zA-Z0-9]/g);
-    const normalizedProjectName = normalizedProjectNameArray ? normalizedProjectNameArray.join('') : '';
-    let name = `${ normalizedProjectName }storage`;
-    let valid = false;
-    const validate = checkNameAvailability(client, logger, false);
-    do {
-        valid = await validate(name);
-        if (!valid) {
-            name = `${ name }${ Math.ceil(Math.random() * 100) }`;
-        }
-    } while (!valid);
-    return name;
+function accountNameGenerator(client: StorageManagementClient, logger: Logger) {
+    return async (name: string) => {
+        return await generateName(name, checkNameAvailability(client, logger, false));
+    };
 }
 
 export async function setStaticSiteToPublic(serviceURL: ServiceURL) {
@@ -148,8 +173,6 @@ export async function createAccount(
     logger.info('setting container to be publicly available static site');
     await setStaticSiteToPublic(serviceURL);
     logger.info('Done');
-
-
 }
 
 export async function createWebContainer(
