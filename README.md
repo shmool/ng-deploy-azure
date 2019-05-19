@@ -90,3 +90,10 @@ To clear the cached credentials run:
 ```sh
 ng run <project-name>:logout
 ```
+
+### Testing
+
+Testing is done with Jest. To run your tests you type:
+
+```
+npm run test:jest
