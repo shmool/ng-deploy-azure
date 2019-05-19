@@ -4,7 +4,9 @@ import { AddOptions } from '../../shared/types';
 
 jest.mock('inquirer');
 
+
 // AddOptions, Logger
+
 
 const SUBID = '124';
 
@@ -12,7 +14,7 @@ const optionsMock = <AddOptions>{
   subscriptionId: SUBID 
 };
 
-const optionsMockEmpty = <AddOptions>{};
+// const optionsMockEmpty = <AddOptions>{};
 
 const loggerMock = { 
   debug: jest.fn(),
@@ -76,3 +78,4 @@ describe('subscription', () => {
     expect(actual).toEqual(expected);
   });
 });
+
