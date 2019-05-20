@@ -5,6 +5,7 @@ import { getLocation, locations, StorageLocation } from './locations';
 import * as Models from '@azure/arm-resources/lib/models/index';
 import { AddOptions, Logger } from '../shared/types';
 import { generateName } from '../prompt/name-generator';
+import { spinner } from '../prompt/spinner';
 
 const defaultLocation = {
     id: 'westus',
@@ -49,7 +50,9 @@ export async function getResourceGroup(
     let location = getLocation(options.location);
 
     const client = new ResourceManagementClient(creds, subscription);
+    spinner.start('Fetching resource groups');
     const resourceGroupList = await client.resourceGroups.list() as ResourceGroupDetails[];
+    spinner.stop();
     let result;
 
     const initialName = options.project + '-static-deploy';
@@ -74,19 +77,21 @@ export async function getResourceGroup(
         result = (await filteredList(
             resourceGroupList,
             resourceGroupsPromptOptions,
-            newResourceGroupsPromptOptions)).resourceGroup;
+            newResourceGroupsPromptOptions));
 
         // TODO: add check whether the new resource group doesn't already exist.
         //  Currently throws an error of exists in a different location:
         //  Invalid resource group location 'westus'. The Resource group already exists in location 'eastus2'.
 
-        resourceGroupName = result.name || result.newResourceGroup;
+        result = result.resourceGroup || result;
+        resourceGroupName = result.newResourceGroup || result.name;
     }
 
     if (!result || result.newResourceGroup) {
         location = location || await askLocation(); // if quickstart - location defined above
-        logger.info(`Creating resource group ${ resourceGroupName } at ${ location.name } (${ location.id })`);
+        spinner.start(`Creating resource group ${ resourceGroupName } at ${ location.name } (${ location.id })`);
         result = await createResourceGroup(resourceGroupName, subscription, creds, location.id);
+        spinner.succeed();
     }
 
     return result;
