@@ -11,7 +11,6 @@ export interface Logger {
 export interface AddOptions {
     project: string;
     manual?: boolean;
-    debug?: boolean;
     subscriptionId?: string;
     subscriptionName?: string;
     resourceGroup?: string;
@@ -20,4 +19,6 @@ export interface AddOptions {
     'resource-allocation'?: boolean;
     config?: boolean;
     dry?: boolean;
+    telemetry?: boolean;
+    '--'?: string[];
 }
