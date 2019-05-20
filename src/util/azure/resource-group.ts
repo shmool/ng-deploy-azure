@@ -1,10 +1,9 @@
 import { DeviceTokenCredentials } from '@azure/ms-rest-nodeauth';
-import { ResourceManagementClient } from '@azure/arm-resources';
-import { filteredList, ListItem } from '../prompt/list';
+import { filteredList } from '../prompt/list';
 import { getLocation, locations, StorageLocation } from './locations';
-import * as Models from '@azure/arm-resources/lib/models/index';
 import { AddOptions, Logger } from '../shared/types';
 import { generateName } from '../prompt/name-generator';
+import { getResourceGroups, ResourceGroupDetails, createResourceGroup } from './resource-group-helper';
 
 const defaultLocation = {
     id: 'westus',
@@ -14,13 +13,6 @@ const defaultLocation = {
 export interface ResourceGroup {
     id: string;
     name: string;
-    location: string;
-}
-
-interface ResourceGroupDetails extends ListItem {
-    id: string;
-    name: string;
-    properties?: any;
     location: string;
 }
 
@@ -48,8 +40,7 @@ export async function getResourceGroup(
     let resourceGroupName = options.resourceGroup || '';
     let location = getLocation(options.location);
 
-    const client = new ResourceManagementClient(creds, subscription);
-    const resourceGroupList = await client.resourceGroups.list() as ResourceGroupDetails[];
+    const resourceGroupList = await getResourceGroups(creds, subscription);
     let result;
 
     const initialName = options.project + '-static-deploy';
@@ -95,18 +86,6 @@ export async function getResourceGroup(
 export async function askLocation(): Promise<StorageLocation> {
     const res = await filteredList(locations, locationPromptOptions);
     return res.location;
-}
-
-export async function createResourceGroup(
-    name: string,
-    subscription: string,
-    creds: DeviceTokenCredentials,
-    location: string
-): Promise<Models.ResourceGroupsCreateOrUpdateResponse> {
-    // TODO: throws an error here if the subscription is wrong
-    const client = new ResourceManagementClient(creds, subscription);
-    const resourceGroupRes = await client.resourceGroups.createOrUpdate(name, { location });
-    return resourceGroupRes;
 }
 
 function resourceGroupExists(resourceGroupList: ResourceGroupDetails[]) {
