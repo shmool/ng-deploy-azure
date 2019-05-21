@@ -6,6 +6,8 @@
       "es2015",
       "dom"
     ],
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
     "declaration": true,
     "module": "commonjs",
     "moduleResolution": "node",

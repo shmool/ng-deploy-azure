@@ -10,6 +10,7 @@ import { AddOptions, Logger } from '../shared/types';
 import { SchematicsException } from '@angular-devkit/schematics';
 import { ResourceGroup } from './resource-group';
 import { generateName } from '../prompt/name-generator';
+import { spinner } from '../prompt/spinner';
 
 interface AccountDetails extends ListItem {
     id: string;
@@ -44,7 +45,9 @@ export async function getAccount(
     let accountName = options.account || '';
     let needToCreateAccount = false;
 
+    spinner.start('Fetching storage accounts');
     const accounts = await client.storageAccounts.listByResourceGroup(resourceGroup.name);
+    spinner.stop();
 
     function getInitialAccountName() {
         const normalizedProjectNameArray = options.project.match(/[a-zA-Z0-9]/g);
@@ -53,8 +56,8 @@ export async function getAccount(
     }
 
     const initialName = getInitialAccountName();
-    const generateDefaultAccountName = accountNameGenerator(client, logger);
-    const validateAccountName = checkNameAvailability(client, logger, true);
+    const generateDefaultAccountName = accountNameGenerator(client);
+    const validateAccountName = checkNameAvailability(client, true);
 
     newAccountPromptOptions.default = initialName;
     newAccountPromptOptions.defaultGenerator = generateDefaultAccountName;
@@ -88,26 +91,30 @@ export async function getAccount(
     }
 
     if (needToCreateAccount) {
-        logger.info(`creating ${ accountName }`);
-        await createAccount(accountName, client, resourceGroup.name, resourceGroup.location, logger);
+        spinner.start(`creating ${ accountName }`);
+        await createAccount(accountName, client, resourceGroup.name, resourceGroup.location);
+        spinner.succeed();
     }
 
     return accountName;
 }
 
-function checkNameAvailability(client: StorageManagementClient, logger: Logger, warn?: boolean) {
+function checkNameAvailability(client: StorageManagementClient, warn?: boolean) {
     return async (account: string) => {
+        spinner.start();
         const availability = await client.storageAccounts.checkNameAvailability(account);
         if (!availability.nameAvailable && warn) {
-            logger.warn(availability.message || 'chosen name is not available');
+            spinner.fail(availability.message || 'chosen name is not available');
+        } else {
+            spinner.stop();
         }
         return !!availability.nameAvailable;
     };
 }
 
-function accountNameGenerator(client: StorageManagementClient, logger: Logger) {
+function accountNameGenerator(client: StorageManagementClient) {
     return async (name: string) => {
-        return await generateName(name, checkNameAvailability(client, logger, false));
+        return await generateName(name, checkNameAvailability(client, false));
     };
 }
 
@@ -144,8 +151,7 @@ export async function createAccount(
     account: string,
     client: StorageManagementClient,
     resourceGroupName: string,
-    location: string,
-    logger: Logger
+    location: string
 ) {
     const poller = await client.storageAccounts.beginCreate(
         resourceGroupName,
@@ -158,15 +164,16 @@ export async function createAccount(
     );
     await poller.pollUntilFinished();
 
-    logger.info('retrieving account keys');
+    spinner.start('Retrieving account keys');
     const accountKey = await getAccountKey(account, client, resourceGroupName);
     if (!accountKey) {
         throw new SchematicsException('no keys retrieved for storage account');
     }
-    logger.info('Done');
+    spinner.succeed();
 
-    logger.info('creating web container');
+    spinner.start('Creating web container');
     await createWebContainer(client, resourceGroupName, account);
+    spinner.succeed();
     const pipeline = ServiceURL.newPipeline(
         new SharedKeyCredential(account, accountKey)
     );
@@ -174,9 +181,9 @@ export async function createAccount(
         `https://${ account }.blob.core.windows.net`,
         pipeline
     );
-    logger.info('setting container to be publicly available static site');
+    spinner.start('setting container to be publicly available static site');
     await setStaticSiteToPublic(serviceURL);
-    logger.info('Done');
+    spinner.succeed();
 }
 
 export async function createWebContainer(

@@ -15,16 +15,8 @@ import { AddOptions } from '../util/shared/types';
 export function ngAdd(_options: AddOptions): Rule {
     return (tree: Tree, _context: SchematicContext) => {
         return chain([
-            logMsftLogo(),
             addDeployAzure(_options)
         ])(tree, _context);
-    };
-}
-
-function logMsftLogo(): Rule {
-    return (tree: Tree, _context: SchematicContext): Tree => {
-        _context.logger.info('');
-        return tree;
     };
 }
 
