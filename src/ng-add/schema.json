@@ -17,11 +17,6 @@
       "alias": "m",
       "description": "Manually configure (select or create) the resource group and storage account. Default - false: creates a resource group and storage account with arbitrary names."
     },
-    "debug": {
-      "type": "boolean",
-      "default": false,
-      "description": "Debug."
-    },
     "subscriptionId": {
       "type": "string",
       "default": "",
@@ -66,8 +61,14 @@
       "type": "boolean",
       "default": false,
       "description": "Don't validate or change any files. Only output what would be the change in the project."
+    },
+    "telemetry": {
+      "type": "boolean",
+      "default": true,
+      "description": "Send usage reports to Microsoft.",
+      "alias": "t"
     }
   },
   "required": [],
-  "additionalProperties": false
+  "additionalProperties": true
 }
