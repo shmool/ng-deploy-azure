@@ -2,7 +2,7 @@
 
 # Outputs
 src/**/*.js
-__mocks__/*.js
+!__mocks__/*.js
 src/**/*.js.map
 src/**/*.d.ts
 lib/**/*
