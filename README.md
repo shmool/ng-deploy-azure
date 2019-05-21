@@ -96,8 +96,17 @@ This project collects usage data and sends it to Microsoft to help improve our p
 
 Turn off telemetry:
 
+Like so
 ```
-ng add ng-deploy-azure -telemetry=false
+ng add ng-deploy-azure --telemetry=false
+```
+
+or like so
+
+```
+```
+ng add ng-deploy-azure -t=false
+```
 ```
 
 ## Reporting Security Issues
