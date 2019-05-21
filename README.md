@@ -91,6 +91,33 @@ To clear the cached credentials run:
 ng run <project-name>:logout
 ```
 
+## Data/Telemetry. 
+This project collects usage data and sends it to Microsoft to help improve our products and services. Read Microsoft's [privacy statement](https://privacy.microsoft.com/en-gb/privacystatement) to learn more. 
+
+Turn off telemetry:
+
+Like so
+```
+ng add ng-deploy-azure --telemetry=false
+```
+
+or like so
+
+```
+```
+ng add ng-deploy-azure -t=false
+```
+```
+
+## Reporting Security Issues
+
+Security issues and bugs should be reported privately, via email, to the Microsoft Security
+Response Center (MSRC) at [secure@microsoft.com](mailto:secure@microsoft.com). You should
+receive a response within 24 hours. If for some reason you do not, please follow up via
+email to ensure we received your original message. Further information, including the
+[MSRC PGP](https://technet.microsoft.com/en-us/security/dn606155) key, can be found in
+the [Security TechCenter](https://technet.microsoft.com/en-us/security/default).
+=======
 ### Testing
 
 Testing is done with Jest. To run your tests you type:

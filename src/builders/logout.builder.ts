@@ -1,3 +1,7 @@
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 import { BuilderContext, BuilderOutput, createBuilder } from '@angular-devkit/architect';
 import { clearCreds } from '../util/azure/auth';
 

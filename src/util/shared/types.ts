@@ -1,3 +1,7 @@
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 import { JsonObject } from '@angular-devkit/core';
 
 export interface Logger {
@@ -11,7 +15,6 @@ export interface Logger {
 export interface AddOptions {
     project: string;
     manual?: boolean;
-    debug?: boolean;
     subscriptionId?: string;
     subscriptionName?: string;
     resourceGroup?: string;
@@ -20,4 +23,6 @@ export interface AddOptions {
     'resource-allocation'?: boolean;
     config?: boolean;
     dry?: boolean;
+    telemetry?: boolean;
+    '--'?: string[];
 }
