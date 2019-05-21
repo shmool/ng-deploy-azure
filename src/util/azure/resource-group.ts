@@ -4,6 +4,7 @@ import { getLocation, locations, StorageLocation } from './locations';
 import { AddOptions, Logger } from '../shared/types';
 import { generateName } from '../prompt/name-generator';
 import { getResourceGroups, ResourceGroupDetails, createResourceGroup } from './resource-group-helper';
+import { spinner } from '../prompt/spinner';
 
 const defaultLocation = {
     id: 'westus',
@@ -40,7 +41,9 @@ export async function getResourceGroup(
     let resourceGroupName = options.resourceGroup || '';
     let location = getLocation(options.location);
 
+    spinner.start('Fetching resource groups');
     const resourceGroupList = await getResourceGroups(creds, subscription);
+    spinner.stop();
     let result;
 
     const initialName = options.project + '-static-deploy';
@@ -65,19 +68,21 @@ export async function getResourceGroup(
         result = (await filteredList(
             resourceGroupList,
             resourceGroupsPromptOptions,
-            newResourceGroupsPromptOptions)).resourceGroup;
+            newResourceGroupsPromptOptions));
 
         // TODO: add check whether the new resource group doesn't already exist.
         //  Currently throws an error of exists in a different location:
         //  Invalid resource group location 'westus'. The Resource group already exists in location 'eastus2'.
 
-        resourceGroupName = result.name || result.newResourceGroup;
+        result = result.resourceGroup || result;
+        resourceGroupName = result.newResourceGroup || result.name;
     }
 
     if (!result || result.newResourceGroup) {
         location = location || await askLocation(); // if quickstart - location defined above
-        logger.info(`Creating resource group ${ resourceGroupName } at ${ location.name } (${ location.id })`);
+        spinner.start(`Creating resource group ${ resourceGroupName } at ${ location.name } (${ location.id })`);
         result = await createResourceGroup(resourceGroupName, subscription, creds, location.id);
+        spinner.succeed();
     }
 
     return result;
