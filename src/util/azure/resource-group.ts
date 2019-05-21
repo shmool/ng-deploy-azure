@@ -1,3 +1,7 @@
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 import { DeviceTokenCredentials } from '@azure/ms-rest-nodeauth';
 import { ResourceManagementClient } from '@azure/arm-resources';
 import { filteredList, ListItem } from '../prompt/list';

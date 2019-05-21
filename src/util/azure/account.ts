@@ -1,3 +1,7 @@
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 import { StorageManagementClient } from '@azure/arm-storage';
 import { filteredList, ListItem, newItemPrompt } from '../prompt/list';
 import { Aborter, ServiceURL, SharedKeyCredential } from '@azure/storage-blob';
