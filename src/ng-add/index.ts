@@ -3,7 +3,6 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 import { chain, Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
-import getLogo from '../util/azure/msft';
 import { loginToAzure } from '../util/azure/auth';
 import { DeviceTokenCredentials } from '@azure/ms-rest-nodeauth';
 import { selectSubscription } from '../util/azure/subscription';
@@ -24,7 +23,6 @@ export function ngAdd(_options: AddOptions): Rule {
 
 function logMsftLogo(): Rule {
     return (tree: Tree, _context: SchematicContext): Tree => {
-        _context.logger.info(getLogo());
         _context.logger.info('');
         return tree;
     };
