@@ -6,7 +6,7 @@ This Angular schematic helps you deploy your Angular app to Azure Static Hosting
 With Azure's Blob storage, deploying and hosting a static website is simple and cost-efficient. 
 
 Learn more about Azure Static Hosting in the 
-[blog post announcing Static websites on Azure Storage](https://azure.microsoft.com/en-us/blog/static-websites-on-azure-storage-now-generally-available/&WT.mc_id=ng_deploy_azure-github-cxa).
+[blog post announcing Static websites on Azure Storage](https://azure.microsoft.com/en-us/blog/static-websites-on-azure-storage-now-generally-available/?WT.mc_id=ng_deploy_azure-github-cxa).
 
 ## Usage <a name="usage"></a>
 
@@ -20,7 +20,7 @@ ng run <project-name>:deploy
 To get started, you need:
 - Angular app created and managed by the Angular CLI.
 For help getting started with a new Angular app, check out the [Angular CLI](https://cli.angular.io/).
-- Azure subscription. If you don't have one, [create your Azure free account](https://azure.microsoft.com/en-us/free/&WT.mc_id=ng_deploy_azure-github-cxa).
+- Azure subscription. If you don't have one, [create your Azure free account](https://azure.microsoft.com/en-us/free/?WT.mc_id=ng_deploy_azure-github-cxa).
 
 The schematic runs from within an Angular project. Enter the project's directory.
 Follow these steps to add _ng deploy azure_ to your project, configure it, and deploy your app.
@@ -94,7 +94,7 @@ This command is available only after signing in to Azure.
 
 ## Data/Telemetry <a name="telemetry"></a>
 This project collects usage data and sends it to Microsoft to help improve our products and services. 
-Read Microsoft's [privacy statement](https://privacy.microsoft.com/en-gb/privacystatement/&WT.mc_id=ng_deploy_azure-github-cxa) to learn more. 
+Read Microsoft's [privacy statement](https://privacy.microsoft.com/en-gb/privacystatement/?WT.mc_id=ng_deploy_azure-github-cxa) to learn more. 
 
 To turn off telemetry, add the telemetry flag (`--telemetry` or `-t`) 
 with the `false` value when running `ng add`, like this:
@@ -223,8 +223,8 @@ Security issues and bugs should be reported privately, via email, to the Microso
 Response Center (MSRC) at [secure@microsoft.com](mailto:secure@microsoft.com). You should
 receive a response within 24 hours. If for some reason you do not, please follow up via
 email to ensure we received your original message. Further information, including the
-[MSRC PGP](https://technet.microsoft.com/en-us/security/dn606155/&WT.mc_id=ng_deploy_azure-github-cxa) key, can be found in
-the [Security TechCenter](https://technet.microsoft.com/en-us/security/default/&WT.mc_id=ng_deploy_azure-github-cxa).
+[MSRC PGP](https://technet.microsoft.com/en-us/security/dn606155/?WT.mc_id=ng_deploy_azure-github-cxa) key, can be found in
+the [Security TechCenter](https://technet.microsoft.com/en-us/security/default/?WT.mc_id=ng_deploy_azure-github-cxa).
 
 ## We'd like to thank...
 - [Minko Gechev](https://github.com/mgechev) 
