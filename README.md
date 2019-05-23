@@ -11,7 +11,7 @@ Learn more about Azure Static Hosting in the
 ## Usage <a name="usage"></a>
 
 ####tl;dr
-```$xslt
+```sh
 ng add @azure/ng-deploy 
 ng run <project-name>:deploy
 ```
@@ -30,13 +30,13 @@ Follow these steps to add _ng deploy azure_ to your project, configure it, and d
 Run `ng --version`, make sure you have angular CLI version v8.0.0-beta.18 or greater. 
 If needed, update the CLI following the [instructions](https://www.npmjs.com/package/@angular/cli#updating-angular-cli).
 **As long as version 8 is in RC, use `@next` instead of `@latest`:**
-```$xslt
+```sh
 npm install -g @angular/cli@next
 ```  
 
 Update your project using the command:
 
-```
+```sh
 ng update @angular/cli @angular/core --next=true
 
 ``` 
@@ -71,7 +71,7 @@ Please remove the file before running the command._
 #### Step 3 - deploy <a name="deploy"></a>
 
 Deploy your application to the selected storage account by running:
-```$xslt
+```sh
 ng run <project-name>:deploy
 ```
 
@@ -99,13 +99,13 @@ Read Microsoft's [privacy statement](https://privacy.microsoft.com/en-gb/privacy
 To turn off telemetry, add the telemetry flag (`--telemetry` or `-t`) 
 with the `false` value when running `ng add`, like this:
 
-```
+```sh
 ng add ng-deploy-azure --telemetry=false
 ```
 
 or
 
-```
+```sh
 ng add ng-deploy-azure -t=false
 ```
 
@@ -116,7 +116,7 @@ ng add ng-deploy-azure -t=false
 To manually select and/or create the resources needed for deployment, 
 use the `--manual` (or `-m`) option:
 
-```$xslt
+```sh
 ng add @azure/ng-deploy --manual
 ```
 
@@ -140,7 +140,7 @@ The available options are:
 - `--telemetry` (`-t`) - see [Data/Telemetry](#telemetry)
 
 Example:
-```$xslt
+```sh
 ng add @azure/ng-deploy -m -l="East US" -a=myangularapp
 ```
 
@@ -194,7 +194,7 @@ Make sure TypeScript is version 3.4.5 or greater.
 
 To add the local version of @azure/ng-deploy, link ng-deploy-azure:
 
-```
+```sh
 npm link ng-deploy-azure
 ```
 
@@ -205,7 +205,7 @@ ng add ng-deploy-azure
 ```
 
 The [configuration options](#config) and the other commands (`deploy`, `logout`) are the same as in production:
-```$xslt
+```sh
 ng run <project-name>:deploy
 ```
 
@@ -213,7 +213,7 @@ ng run <project-name>:deploy
 
 Testing is done with [Jest](https://jestjs.io/). To run the tests:
 
-```
+```sh
 npm run test:jest
 ```
 
